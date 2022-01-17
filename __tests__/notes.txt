@@ -1,0 +1,25 @@
+https://reactjs.org/docs/testing.html
+https://callstack.github.io/react-native-testing-library/
+Jest: https://jestjs.io/docs/tutorial-react-native
+E2E testing: https://github.com/wix/detox/
+E2E testing: http://appium.io/
+
+
+Test should be short and test only one thing
+
+Test should be named accordingly:
+Given - some precondition
+When - some action executed by the function that you’re testing
+Then - the expected outcome
+
+Jest 'describe' - can group test, can also be nested
+
+
+Jest mocking - simulate fetching, etc.
+Changing mock: https://stackoverflow.com/questions/48790927/how-to-change-mock-implementation-on-a-per-single-test-basis-jestjs/54361996#54361996
+
+User interaction:
+https://reactnative.dev/docs/testing-overview#testing-user-interactions
+
+Snapshots:
+https://github.com/jest-community/eslint-plugin-jest/blob/main/docs/rules/no-large-snapshots.md
