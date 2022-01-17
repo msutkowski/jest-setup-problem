@@ -2,8 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { NavigationContainer } from '@react-navigation/native';
 import SplashScreen from './routes/SplashScreen';
-import { useGetMyAccountMutation } from './features/user/accountSlice';
-import { setCurUser } from './features/user/curUserSlice';
+import { useLazyGetMyAccountQuery } from './features/user/accountSlice';
 import PublicStack from './routes/stacks/PublicStack';
 import ProtectedStack from './routes/stacks/ProtectedStack';
 import { LocalizationContext } from './app/localization';
@@ -17,30 +16,25 @@ import IMAccount from './common/types/MAccount';
 const App = () => {
 	const { initializeAppLanguage } = useContext(LocalizationContext);
 	const curUser = useAppSelector(state => state.curUser);
-	const dispatch = useAppDispatch();
-	const [getMyAccount] = useGetMyAccountMutation();
+	// Lazy queries match your original implementation of a mutation.
+	// TODO: you'll most likely need handle the presence of `data` and `error` from the query hook for good UI
+	const [getMyAccount, { isLoading, data, error }] = useLazyGetMyAccountQuery();
 
 	useEffect(() => {
 		async function checkAuth() {
 			await setStoredTokenCookies();
-			await getMyAccount()
-				.unwrap()
-				.then(account => dispatch(setCurUser(account)))
-				.catch(e => {
-					//console.log(e);
-				});
+			await getMyAccount().unwrap();
 		}
 
 		initializeAppLanguage();
 		checkAuth();
 	}, [])
 
-	if (curUser.loading)
-	{
-		return (
-			<SplashScreen />
-		)
+	// You'll want to rework this, but you shouldn't render anything other than some type of loading state until the auth check has happened
+	if (isLoading || !data || !error) {
+		return <SplashScreen />
 	}
+
 
 	// NOTE: Maybe 'flex: 1' will be needed on GestureHandlerRootView
 	return (
