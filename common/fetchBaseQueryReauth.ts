@@ -6,7 +6,7 @@ import {
 	FetchBaseQueryError,
 } from '@reduxjs/toolkit/query';
 import API_CONFIG from '../app/configs/apiConfig.json';
-import { logout } from '../features/user/curUserSlice';
+import { logout } from './actions';
 import { storeCookies } from './helpers/CookieHelper';
 
 const baseQueryWithReauth = (options: FetchBaseQueryArgs): BaseQueryFn<

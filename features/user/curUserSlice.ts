@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { logout } from "../../common/actions";
 import IMAccount from "../../common/types/MAccount";
 import accountApi from "./accountSlice";
 import authApi from "./authSlice";
-
 interface ICurUserState {
 	loading: boolean
 	user?: IMAccount;
@@ -15,13 +15,12 @@ const initialState: ICurUserState = {
 const curUserSlice = createSlice({
 	name: 'curUser',
 	initialState,
-	reducers: {
-		logout: (state) => {
+	reducers: {},
+	extraReducers: builder => {
+		builder.addCase(logout, (state) => {
 			state.loading = false;
 			state.user = undefined;
-		}
-	},
-	extraReducers: builder => {
+		});
 		builder.addMatcher(
 			accountApi.endpoints.getMyAccount.matchFulfilled,
 			(state, action) => {
@@ -49,8 +48,8 @@ const curUserSlice = createSlice({
 				state.user = undefined;
 			}
 		);
+
 	}
 });
 
-export const { logout } = curUserSlice.actions;
 export default curUserSlice.reducer;
