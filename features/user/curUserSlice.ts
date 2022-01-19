@@ -1,6 +1,7 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import IMAccount from "../../common/types/MAccount";
 import accountApi from "./accountSlice";
+import authApi from "./authSlice";
 
 interface ICurUserState {
 	loading: boolean
@@ -21,10 +22,33 @@ const curUserSlice = createSlice({
 		}
 	},
 	extraReducers: builder => {
-		// You can just use a matcher here on this query to set the state instead of dispatching a setter
-		builder.addMatcher(accountApi.endpoints.getMyAccount.matchFulfilled, (state, action) => {
-			state.user = action.payload
-		})
+		builder.addMatcher(
+			accountApi.endpoints.getMyAccount.matchFulfilled,
+			(state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			}
+		);
+		builder.addMatcher(
+			accountApi.endpoints.getMyAccount.matchRejected,
+			(state) => {
+				state.loading = false;
+			}
+		);
+		builder.addMatcher(
+			authApi.endpoints.login.matchFulfilled,
+			(state, action) => {
+				state.loading = false;
+				state.user = action.payload;
+			}
+		);
+		builder.addMatcher(
+			authApi.endpoints.login.matchRejected,
+			(state) => {
+				state.loading = false;
+				state.user = undefined;
+			}
+		);
 	}
 });
 

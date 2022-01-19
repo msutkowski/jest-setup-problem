@@ -3,7 +3,6 @@ import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAppDispatch } from '../../../app/hooks';
 import { useLoginMutation } from '../../../features/user/authSlice';
-import { setCurUser } from '../../../features/user/curUserSlice';
 
 const SignInScreen: React.FC = () => {
 	const dispatch = useAppDispatch();
@@ -13,10 +12,7 @@ const SignInScreen: React.FC = () => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const handleLogin = async () => {
-		await login({name: username, password: password})
-			.unwrap()
-			.then(account => dispatch(setCurUser(account)))
-			.catch(error => console.log(error));
+		await login({name: username, password: password});
 	}
 
 	return (

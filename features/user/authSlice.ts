@@ -3,7 +3,6 @@ import API_CONFIG from '../../app/configs/apiConfig.json';
 import baseQueryWithReauth from "../../common/fetchBaseQueryReauth";
 import { LoginRequest } from '../../common/types/Auth';
 import IMAccount from "../../common/types/MAccount";
-import { RefreshTokenRequest } from "../../common/types/RefreshTokenRequest";
 
 const authApi = createApi({
 	reducerPath: 'auth',

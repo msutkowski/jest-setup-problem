@@ -1,7 +1,10 @@
-/*
 import React from 'react';
-import { render as rtlRender } from '@testing-library/react';
-import { combineReducers, configureStore, EnhancedStore } from '@reduxjs/toolkit';
+import { render as rtlRender } from '@testing-library/react-native';
+import {
+	combineReducers,
+	configureStore,
+	EnhancedStore
+ } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 
 import curUserReducer from '../features/user/curUserSlice';
@@ -18,7 +21,18 @@ const rootReducer = combineReducers({
 	[authApi.reducerPath]: authApi.reducer,
 	[accountApi.reducerPath]: accountApi.reducer,
 	[orgsApi.reducerPath]: orgsApi.reducer
-})
+});
+
+const middlewares = [
+	authApi.middleware,
+	accountApi.middleware,
+	orgsApi.middleware
+];
+
+if (__DEV__ && !process.env.JEST_WORKER_ID) {
+	const createDebugger = require('redux-flipper').default;
+	middlewares.push(createDebugger());
+}
 
 type RootState = ReturnType<typeof rootReducer>;
 
@@ -35,7 +49,11 @@ const render = (
 	ui: React.ReactElement<any, string | React.JSXElementConstructor<any>>,
 	{
 		preloadedState,
-		store = configureStore({reducer: rootReducer, preloadedState}),
+		store = configureStore({
+			preloadedState,
+			reducer: rootReducer,
+			middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(middlewares)
+		}),
 		...renderOptions
 	}: Store = {}) => {
 
@@ -47,66 +65,6 @@ const render = (
 }
 
 // Re-export everything
-export * from '@testing-library/react';
+export * from '@testing-library/react-native';
 // Override render method
 export { render };
-*/
-
-import {
-	AnyAction,
-	combineReducers,
-	configureStore,
-	EnhancedStore,
-	Middleware,
-	Reducer,
-} from "@reduxjs/toolkit";
-
-function setupApiStore<
-	A extends {
-		reducer: Reducer<any, any>;
-		reducerPath: string;
-		middleware: Middleware;
-		util: { resetApiState(): any };
-	},
-	R extends Record<string, Reducer<any, any>> = Record<never, never>
->(api: A, extraReducers?: R): { api: any; store: EnhancedStore } {
-	/*
-	 * Modified version of RTK Query's helper function:
-	 * https://github.com/reduxjs/redux-toolkit/blob/master/packages/toolkit/src/query/tests/helpers.tsx
-	 */
-	const getStore = (): EnhancedStore =>
-		configureStore({
-			reducer: combineReducers({
-				[api.reducerPath]: api.reducer,
-				...extraReducers,
-			}),
-			middleware: (gdm) =>
-				gdm({ serializableCheck: false, immutableCheck: false }).concat(
-					api.middleware
-			),
-	  });
-
-	type StoreType = EnhancedStore<
-	{
-		api: ReturnType<A["reducer"]>;
-	} & {
-		[K in keyof R]: ReturnType<R[K]>;
-	},
-	AnyAction,
-	ReturnType<typeof getStore> extends EnhancedStore<any, any, infer M>
-		? M
-		: never
-	>;
-
-	const initialStore = getStore() as StoreType;
-	const refObj = {
-		api,
-		store: initialStore,
-	};
-	const store = getStore() as StoreType;
-	refObj.store = store;
-
-	return refObj;
-}
-
-export { setupApiStore };

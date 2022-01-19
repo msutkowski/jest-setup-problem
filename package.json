@@ -14,6 +14,7 @@
 		"@react-native-async-storage/async-storage": "^1.15.15",
 		"@react-native-cookies/cookies": "^6.0.11",
 		"@react-navigation/bottom-tabs": "^6.0.9",
+		"@react-navigation/devtools": "^6.0.4",
 		"@react-navigation/native": "^6.0.6",
 		"@react-navigation/stack": "^6.0.11",
 		"@reduxjs/toolkit": "^1.6.2",
@@ -33,6 +34,7 @@
 		"react-native-svg": "^12.1.1",
 		"react-native-vector-icons": "^8.1.0",
 		"react-redux": "^7.2.5",
+		"redux-flipper": "^2.0.1",
 		"yup": "^0.32.11"
 	},
 	"devDependencies": {
@@ -54,6 +56,7 @@
 		"metro-react-native-babel-preset": "^0.66.0",
 		"msw": "^0.36.4",
 		"react-native-codegen": "^0.0.7",
+		"react-native-flipper": "^0.128.4",
 		"react-test-renderer": "^17.0.2",
 		"typescript": "^3.8.3"
 	},
